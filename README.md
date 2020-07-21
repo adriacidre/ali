@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Before starting with Ali you must have installed Go.
+Ali requirements for development are Go and a unix based system.
 
 ### Installing
 
@@ -17,6 +17,26 @@ Clone the repository in your computer:
 ```
 $ git clone git@github.com:adriacidre/ali.git
 ```
+
+Then set up your ./basrc or ./zshrc with some commands like the ones below with your own $GOPATH
+
+```
+[ -f ~/.aliases ] && source ~/.aliases
+ali() {
+    $GOPATH/github.com/adriacidre/ali/ali $@
+    source ~/.aliases
+    if [[ "$1" == "rm" ]] then
+        unalias $2
+    fi
+}
+```
+After both requirements:
+
+```
+$ cd ali
+$ go build ./...
+```
+
 
 ## Running the tests
 
@@ -39,12 +59,20 @@ To see a list of aliases:
 $ ./ali l
 ```
 
+This will be the result:
+
+hamster [hamster <parameters>]:<alias description>
+rutylof [rutylof <parameters>]:<alias description>
+
 To create a new aliases:
 
 ```
-$ ./ali a
+$ ./ali a <myalias>
 ```
+To remove an existing aliases:
 
+```
+$ ./ali rm <myalias>
 
 ## Deployment
 
