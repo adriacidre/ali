@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/adriacidre/aliases/config"
-	"github.com/adriacidre/aliases/editor"
+	"github.com/adriacidre/ali/config"
+	"github.com/adriacidre/ali/editor"
 	"github.com/fatih/color"
 	. "github.com/logrusorgru/aurora"
 	"github.com/zyedidia/highlight"
