@@ -4,53 +4,75 @@ Shell script alias manager.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+Ali requirements for development are Go and a unix based system.
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+Clone the repository in your computer:
 
 ```
-Give the example
+$ git clone git@github.com:adriacidre/ali.git
 ```
 
-And repeat
+Then set up your ./basrc or ./zshrc with some commands like the ones below with your own $GOPATH
 
 ```
-until finished
+[ -f ~/.aliases ] && source ~/.aliases
+ali() {
+    $GOPATH/github.com/adriacidre/ali/ali $@
+    source ~/.aliases
+    if [[ "$1" == "rm" ]] then
+        unalias $2
+    fi
+}
+```
+After both requirements:
+
+```
+$ cd ali
+$ go build ./...
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+TBD
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ### And coding style tests
 
-Explain what these tests test and why
+TBD
 
 ```
 Give an example
 ```
+
+## How to use it
+
+To see a list of aliases:
+
+```
+$ ./ali l
+```
+
+This will be the result:
+
+hamster [hamster <parameters>]:<alias description>
+rutylof [rutylof <parameters>]:<alias description>
+
+To create a new aliases:
+
+```
+$ ./ali a <myalias>
+```
+To remove an existing aliases:
+
+```
+$ ./ali rm <myalias>
 
 ## Deployment
 
