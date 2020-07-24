@@ -107,12 +107,10 @@ func details(c config.Config, name string) {
 
 func add(c config.Config, path, name string) {
 
-
-	for _, c := range c.Commands {
-		if c.Name == name {
-			fmt.Println("Sorry, this ali is already taken.")
-			return
-		}
+	_, err := c.Get(name)
+	if err == nil {
+		fmt.Println("Alias "+name+" already use")
+		return
 	}
 	
 	alias, err := editor.CaptureInputFromEditor(

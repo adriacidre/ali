@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"errors"
 )
 
 const COMMAND_PREFIX = "# "
@@ -23,6 +24,15 @@ type Command struct {
 
 type Config struct {
 	Commands []*Command
+}
+
+func (c *Config) Get(name string) (*Command , error){
+	for _, c := range c.Commands {
+		if c.Name == name {
+			return c, nil
+		}
+	}
+	return nil, errors.New("")
 }
 
 func (c *Config) Parse(path string) error {
