@@ -82,6 +82,12 @@ func list(c config.Config) {
 }
 
 func details(c config.Config, name string) {
+	_, err := c.Get(name)
+	if err != nil {
+		fmt.Println("It's not posible to show "+name+" as it doesn't exist.")
+		return
+	}
+
 	for _, c := range c.Commands {
 		if c.Name == name {
 			fmt.Println(Yellow(c.Name), ":", c.Description)
@@ -130,6 +136,12 @@ func add(c config.Config, path, name string) {
 }
 
 func rm(c config.Config, path, name string) {
+	_, err := c.Get(name)
+	if err != nil {
+		fmt.Println("It's not posible remove "+name+" as it doesn't exist.")
+		return
+	}
+	
 	c.RmCommand(name)
 	c.Save(path)
 }
