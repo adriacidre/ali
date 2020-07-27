@@ -84,7 +84,7 @@ func list(c config.Config) {
 func details(c config.Config, name string) {
 	_, err := c.Get(name)
 	if err != nil {
-		fmt.Println("It's not posible to show "+name+" as it doesn't exist.")
+		fmt.Println("Alias not found.")
 		return
 	}
 
@@ -115,7 +115,7 @@ func add(c config.Config, path, name string) {
 
 	_, err := c.Get(name)
 	if err == nil {
-		fmt.Println("Alias "+name+" already use")
+		fmt.Println("Alias not found.")
 		return
 	}
 	
