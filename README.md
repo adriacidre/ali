@@ -18,7 +18,7 @@ Clone the repository in your computer:
 $ git clone git@github.com:adriacidre/ali.git
 ```
 
-Then set up your ./basrc with the following command:
+Then set up your ./zshrc with the following command:
 
 ```
 $ make install
