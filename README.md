@@ -18,18 +18,12 @@ Clone the repository in your computer:
 $ git clone git@github.com:adriacidre/ali.git
 ```
 
-Then set up your ./basrc or ./zshrc with some commands like the ones below with your own $GOPATH
+Then set up your ./basrc with the following command:
 
 ```
-[ -f ~/.aliases ] && source ~/.aliases
-ali() {
-    $GOPATH/github.com/adriacidre/ali/ali $@
-    source ~/.aliases
-    if [[ "$1" == "rm" ]] then
-        unalias $2
-    fi
-}
+$ make install
 ```
+
 After both requirements:
 
 ```
