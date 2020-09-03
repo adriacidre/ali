@@ -24,17 +24,6 @@ Then set up your ./zshrc with the following command:
 $ make install
 ```
 
-And set up the ali with some commands like the ones below with your own $GOPATH
-
-```
-ali() {
-    $GOPATH/github.com/adriacidre/ali/ali $@	
-    source ~/.aliases	
-    if [[ "$1" == "rm" ]] then	
-        unalias $2	
-    fi	
-}
-```
 
 After both requirements:
 
