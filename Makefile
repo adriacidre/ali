@@ -1,7 +1,13 @@
 #!/bin/bash
 
 install:
+	@echo "Building binaries"
 	go build
-	cp -n _tpl/.aliases ~/.aliases
-	sed -i 's/{{PATH}}/`pwd`/g' ~/.aliases
-	echo "[ -f ~/.aliases ] && source ~/.aliases" >> ~/.zshrc
+	@echo "Replacing paths on your config files"
+	@CURRENT_PATH=`pwd`
+	@sed -i'' -e "s|{{PATH}}|$CURRENT_PATH|g" _tpl/.aliases
+	@echo "Setting up config files"
+	@cp -n _tpl/.aliases ~/.aliases || true
+	@echo "Setting up ali on your zshrc"
+	@echo "[ -f ~/.aliases ] && source ~/.aliases" >> ~/.zshrc
+	@echo "\nAli is now ready to be used! type 'ali list' to list your commands"
