@@ -1,0 +1,11 @@
+# ali
+## description: Alias manager
+## usage: ali ...
+## group: core
+ali() {
+    {{PATH}}/ali $@	
+    source ~/.aliases	
+    if [[ "$1" == "rm" ]] then	
+        unalias $2	
+    fi	
+}
