@@ -35,6 +35,16 @@ func (c *Config) Get(name string) (*Command , error){
 	return nil, errors.New("")
 }
 
+func (c *Config) Position(name string) (int){
+
+	for pos, c := range c.Commands {
+		if c.Name == name {
+			return pos
+		}
+	}
+	return -1
+}
+
 func (c *Config) Parse(path string) error {
 	lines, err := c.readLines(path)
 	if err != nil {

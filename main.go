@@ -46,6 +46,8 @@ func main() {
 		add(c, path, os.Args[2])
 	case "rm", "r":
 		rm(c, path, os.Args[2])
+	case "update", "ud":
+		update(c, path, os.Args[2])
 	case "source", "s":
 		source(c, path)
 	default:
@@ -118,7 +120,7 @@ func add(c config.Config, path, name string) {
 		fmt.Println("Alias not found.")
 		return
 	}
-	
+
 	alias, err := editor.CaptureInputFromEditor(
 		editor.GetPreferredEditorFromEnvironment,
 		c.HeaderTemplate(name),
@@ -144,6 +146,40 @@ func rm(c config.Config, path, name string) {
 	
 	c.RmCommand(name)
 	c.Save(path)
+}
+
+func update(c config.Config, path, name string) {
+	_, err := c.Get(name)
+	if err != nil {
+		fmt.Println("It's not posible update "+name+" as it doesn't exist.")
+		return
+	}
+
+	search := c.Position(name)
+	// I print this line because line 180 is commented. As soon as I fix line 180 I'll delete this
+	fmt.Println(search)
+
+	for _, c := range c.Commands {
+		if c.Name == name {	
+			//what do I have to introduce here in order to save the info of "name"?
+			//and open it then correctly in next command HeaderTemplate(name)
+		}
+	}
+
+	alias, err := editor.CaptureInputFromEditor(
+		editor.GetPreferredEditorFromEnvironment,
+		c.HeaderTemplate(name),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	ctmp := config.Config{}
+	ctmp.ParseBody(alias)
+	//this line below is not working
+	//c.Commands[search] = &ctmp
+	c.Save(path)
+
 }
 
 func source(c config.Config, path string) {
