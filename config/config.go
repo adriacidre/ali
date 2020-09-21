@@ -2,10 +2,10 @@ package config
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
-	"errors"
 )
 
 const COMMAND_PREFIX = "# "
@@ -22,27 +22,57 @@ type Command struct {
 	Depends     []string
 }
 
+func (c *Command) Byte() []byte {
+	body := strings.Join(c.ToLines(), "\n")
+	return []byte(body)
+}
+
+func (c *Command) ToLines() []string {
+	lines := []string{}
+	lines = append(lines, "")
+	lines = append(lines, COMMAND_PREFIX+c.Name)
+	lines = append(lines, PROPERTY_PREFIX+"description: "+c.Description)
+	if c.ID != "" {
+		lines = append(lines, PROPERTY_PREFIX+"id: "+c.ID)
+	}
+	if c.Usage != "" {
+		lines = append(lines, PROPERTY_PREFIX+"usage: "+c.Usage)
+	}
+	if len(c.Tags) > 0 {
+		lines = append(lines, PROPERTY_PREFIX+"tags: "+strings.Join(c.Tags, ","))
+	}
+	if len(c.Depends) > 0 {
+		lines = append(lines, PROPERTY_PREFIX+"depends: "+strings.Join(c.Depends, ","))
+	}
+	if len(c.Group) > 0 {
+		lines = append(lines, PROPERTY_PREFIX+"group: "+c.Group)
+	}
+	lines = append(lines, c.Content)
+
+	return lines
+}
+
 type Config struct {
 	Commands []*Command
 }
 
-func (c *Config) Get(name string) (*Command , error){
+func (c *Config) Get(name string) (*Command, error) {
 	for _, c := range c.Commands {
 		if c.Name == name {
 			return c, nil
 		}
 	}
-	return nil, errors.New("")
+	return nil, errors.New("not found")
 }
 
-func (c *Config) Position(name string) (int){
-
-	for pos, c := range c.Commands {
-		if c.Name == name {
-			return pos
+func (c *Config) Update(name string, input *Command) error {
+	for pos, cmd := range c.Commands {
+		if cmd.Name == name {
+			c.Commands[pos] = input
+			return nil
 		}
 	}
-	return -1
+	return errors.New("not found")
 }
 
 func (c *Config) Parse(path string) error {
@@ -104,25 +134,9 @@ func (c *Config) parseLines(lines []string) {
 func (c *Config) toLines() []string {
 	lines := []string{}
 	for _, cm := range c.Commands {
-		lines = append(lines, "")
-		lines = append(lines, COMMAND_PREFIX+cm.Name)
-		lines = append(lines, PROPERTY_PREFIX+"description: "+cm.Description)
-		if cm.ID != "" {
-			lines = append(lines, PROPERTY_PREFIX+"id: "+cm.ID)
+		for _, l := range cm.ToLines() {
+			lines = append(lines, l)
 		}
-		if cm.Usage != "" {
-			lines = append(lines, PROPERTY_PREFIX+"usage: "+cm.Usage)
-		}
-		if len(cm.Tags) > 0 {
-			lines = append(lines, PROPERTY_PREFIX+"tags: "+strings.Join(cm.Tags, ","))
-		}
-		if len(cm.Depends) > 0 {
-			lines = append(lines, PROPERTY_PREFIX+"depends: "+strings.Join(cm.Depends, ","))
-		}
-		if len(cm.Group) > 0 {
-			lines = append(lines, PROPERTY_PREFIX+"group: "+cm.Group)
-		}
-		lines = append(lines, cm.Content)
 	}
 
 	return lines
