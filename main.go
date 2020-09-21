@@ -140,35 +140,24 @@ func add(c config.Config, path, name string) {
 func rm(c config.Config, path, name string) {
 	_, err := c.Get(name)
 	if err != nil {
-		fmt.Println("It's not posible remove "+name+" as it doesn't exist.")
+		fmt.Println("It's not posible remove " + name + " as it doesn't exist.")
 		return
 	}
-	
+
 	c.RmCommand(name)
 	c.Save(path)
 }
 
 func update(c config.Config, path, name string) {
-	_, err := c.Get(name)
+	cmd, err := c.Get(name)
 	if err != nil {
-		fmt.Println("It's not posible update "+name+" as it doesn't exist.")
+		fmt.Println("It's not posible update " + name + " as it doesn't exist.")
 		return
-	}
-
-	search := c.Position(name)
-	// I print this line because line 180 is commented. As soon as I fix line 180 I'll delete this
-	fmt.Println(search)
-
-	for _, c := range c.Commands {
-		if c.Name == name {	
-			//what do I have to introduce here in order to save the info of "name"?
-			//and open it then correctly in next command HeaderTemplate(name)
-		}
 	}
 
 	alias, err := editor.CaptureInputFromEditor(
 		editor.GetPreferredEditorFromEnvironment,
-		c.HeaderTemplate(name),
+		cmd.Byte(),
 	)
 	if err != nil {
 		panic(err)
@@ -176,8 +165,8 @@ func update(c config.Config, path, name string) {
 
 	ctmp := config.Config{}
 	ctmp.ParseBody(alias)
-	//this line below is not working
-	//c.Commands[search] = &ctmp
+	c.Update(name, ctmp.Commands[0])
+
 	c.Save(path)
 
 }
