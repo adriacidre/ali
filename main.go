@@ -46,6 +46,8 @@ func main() {
 		add(c, path, os.Args[2])
 	case "rm", "r":
 		rm(c, path, os.Args[2])
+	case "update", "ud":
+		update(c, path, os.Args[2])
 	case "source", "s":
 		source(c, path)
 	default:
@@ -118,7 +120,7 @@ func add(c config.Config, path, name string) {
 		fmt.Println("Alias not found.")
 		return
 	}
-	
+
 	alias, err := editor.CaptureInputFromEditor(
 		editor.GetPreferredEditorFromEnvironment,
 		c.HeaderTemplate(name),
@@ -138,12 +140,34 @@ func add(c config.Config, path, name string) {
 func rm(c config.Config, path, name string) {
 	_, err := c.Get(name)
 	if err != nil {
-		fmt.Println("It's not posible remove "+name+" as it doesn't exist.")
+		fmt.Println("It's not posible remove " + name + " as it doesn't exist.")
 		return
 	}
-	
+
 	c.RmCommand(name)
 	c.Save(path)
+}
+
+func update(c config.Config, path, name string) {
+	cmd, err := c.Get(name)
+	if err != nil {
+		fmt.Println("It's not posible update " + name + " as it doesn't exist.")
+		return
+	}
+
+	alias, err := editor.CaptureInputFromEditor(
+		editor.GetPreferredEditorFromEnvironment,
+		cmd.Byte(),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	ctmp := config.Config{}
+	ctmp.ParseBody(alias)
+	c.Update(name, ctmp.Commands[0])
+	c.Save(path)
+
 }
 
 func source(c config.Config, path string) {
